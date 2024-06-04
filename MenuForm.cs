@@ -16,6 +16,7 @@ namespace Saper
         {
             InitializeComponent();
         }
+        // Обработка нажатия кнопки "New game" (-> Выбор уровня сложности)
         private void NewGameButton_Click(object sender, EventArgs e)
         {
             ChooseEasyButton.Visible = true;
@@ -24,6 +25,7 @@ namespace Saper
             StartGameButton.Visible = true;
         }
 
+        // Обработка нажатия кнопки "Start game" (Начинается раунд)
         private void StartGameButton_Click(object sender, EventArgs e)
         {
             BattleField battleField = new BattleField(this, difficulty);
@@ -31,19 +33,10 @@ namespace Saper
             this.Hide();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
+        // Обработка нажатия кнопки "Exit" (Выход)
+        private void ExitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void ChooseEasyButton_Click(object sender, EventArgs e)
@@ -71,6 +64,13 @@ namespace Saper
             ChooseHardButton.BackColor = Color.Wheat;
             difficulty = DifficultyLevel.Hard;
             StartGameButton.Enabled = true;
+        }
+
+        // Обработка нажатия кнопки "Records"
+        // Выбор таблицы рекордов
+        private void RecordsButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

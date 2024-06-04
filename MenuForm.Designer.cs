@@ -41,6 +41,7 @@
             // NewGameButton
             // 
             NewGameButton.BackColor = Color.Wheat;
+            NewGameButton.FlatStyle = FlatStyle.Flat;
             NewGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             NewGameButton.Location = new Point(12, 146);
             NewGameButton.Name = "NewGameButton";
@@ -53,6 +54,7 @@
             // RecordsButton
             // 
             RecordsButton.BackColor = Color.Wheat;
+            RecordsButton.FlatStyle = FlatStyle.Flat;
             RecordsButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             RecordsButton.Location = new Point(12, 189);
             RecordsButton.Name = "RecordsButton";
@@ -60,10 +62,12 @@
             RecordsButton.TabIndex = 2;
             RecordsButton.Text = "RECORDS";
             RecordsButton.UseVisualStyleBackColor = false;
+            RecordsButton.Click += RecordsButton_Click;
             // 
             // ExitGameButton
             // 
             ExitGameButton.BackColor = Color.Wheat;
+            ExitGameButton.FlatStyle = FlatStyle.Flat;
             ExitGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ExitGameButton.Location = new Point(12, 272);
             ExitGameButton.Name = "ExitGameButton";
@@ -71,12 +75,14 @@
             ExitGameButton.TabIndex = 3;
             ExitGameButton.Text = "EXIT";
             ExitGameButton.UseVisualStyleBackColor = false;
-            ExitGameButton.Click += button2_Click;
+            ExitGameButton.Click += ExitButton_Click;
             // 
             // ChooseEasyButton
             // 
             ChooseEasyButton.BackColor = Color.Wheat;
+            ChooseEasyButton.FlatStyle = FlatStyle.Flat;
             ChooseEasyButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            ChooseEasyButton.ForeColor = SystemColors.ControlText;
             ChooseEasyButton.Location = new Point(238, 102);
             ChooseEasyButton.Name = "ChooseEasyButton";
             ChooseEasyButton.Size = new Size(172, 37);
@@ -89,6 +95,7 @@
             // ChooseMediumButton
             // 
             ChooseMediumButton.BackColor = Color.Wheat;
+            ChooseMediumButton.FlatStyle = FlatStyle.Flat;
             ChooseMediumButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ChooseMediumButton.Location = new Point(238, 146);
             ChooseMediumButton.Name = "ChooseMediumButton";
@@ -102,6 +109,7 @@
             // ChooseHardButton
             // 
             ChooseHardButton.BackColor = Color.Wheat;
+            ChooseHardButton.FlatStyle = FlatStyle.Flat;
             ChooseHardButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ChooseHardButton.Location = new Point(238, 189);
             ChooseHardButton.Name = "ChooseHardButton";
@@ -116,6 +124,7 @@
             // 
             StartGameButton.BackColor = Color.Wheat;
             StartGameButton.Enabled = false;
+            StartGameButton.FlatStyle = FlatStyle.Flat;
             StartGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             StartGameButton.Location = new Point(238, 272);
             StartGameButton.Name = "StartGameButton";

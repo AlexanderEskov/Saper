@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,9 +12,9 @@ namespace Saper
     {
         public enum Flag
         {
-            None = 0,
-            Marked = 1,
-            Unknown = 2
+            None,
+            Marked,
+            Unknown
         }
 
         public enum Content
@@ -25,8 +27,6 @@ namespace Saper
             content = Content.Empty;
             flag = Flag.None;
         }
-
-        
 
         // Переключает флаг ячейки по правой кнопке мыши
         public void ToggleFlag()
@@ -48,6 +48,7 @@ namespace Saper
             }
         }
 
+        // True, если в ячейке есть бомба
         public bool hasBomb()
         {
             if(this.content == Content.Bomb)
@@ -59,11 +60,29 @@ namespace Saper
 
         internal bool empty()
         {
-            throw new NotImplementedException();
+            return !this.hasBomb();
         }
 
-        public Content content;
-        public Flag flag;
-        public int BombsAround;
+        public bool plantBomb()
+        {
+            if (empty())
+            {
+                this.content = Content.Bomb;
+                return true;
+            }
+            return false;
+        }
+
+        public void setBombsAround(int count)
+        {
+            this.BombsAround = count;
+        }
+
+        public Content content;     // Реальное содержимое ячейки (Есть бомба или нет)
+        public Flag flag;           // Метка установленная игроком ("Пусто", "Флаг", или "Неизвестно")
+        public int BombsAround;     // Количество бомб вокруг
+        public int x;               // Координата ячейки X
+        public int y;               // Координата ячейки Y
+        public bool visited;        // Признак посещения клетки за ход
     }
 }
