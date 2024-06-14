@@ -19,6 +19,8 @@ namespace Saper
         // Обработка нажатия кнопки "New game" (-> Выбор уровня сложности)
         private void NewGameButton_Click(object sender, EventArgs e)
         {
+            RecordTable.Visible = false;
+            RecordsLabel.Visible = false;
             ChooseEasyButton.Visible = true;
             ChooseMediumButton.Visible = true;
             ChooseHardButton.Visible = true;
@@ -70,7 +72,42 @@ namespace Saper
         // Выбор таблицы рекордов
         private void RecordsButton_Click(object sender, EventArgs e)
         {
+            ChooseEasyButton.Visible = false;
+            ChooseMediumButton.Visible = false;
+            ChooseHardButton.Visible = false;
+            StartGameButton.Visible = false;
+            RecordTable.Visible = true;
+            RecordsLabel.Visible = true;
+            RecordTable.Items.Clear();
+            string[] lines = File.ReadAllLines("records.txt");
+            string text = "";
+            for(int i = 0; i < lines.Length; i++)
+            {
+                int time = Convert.ToInt32(lines[i]);
+                string min, sec;
+                if ( time / 60 < 10)
+                {
+                    min = "0" + Convert.ToString(time / 60);
+                }
+                else
+                {
+                    min = Convert.ToString(time / 60);
+                }
 
+                if (time % 60 < 10)
+                {
+                    sec = "0" + Convert.ToString(time % 60);
+                }
+                else
+                {
+                    sec = Convert.ToString(time % 60);
+                }
+
+                lines[i] = "#" + Convert.ToString(i + 1) + " " + min + ":" + sec;
+                RecordTable.Items.Add(lines[i]);
+            }
+            //RecordTable.Text = text;
         }
+
     }
 }

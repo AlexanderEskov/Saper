@@ -36,6 +36,8 @@
             ChooseMediumButton = new Button();
             ChooseHardButton = new Button();
             StartGameButton = new Button();
+            RecordTable = new ListBox();
+            RecordsLabel = new Label();
             SuspendLayout();
             // 
             // NewGameButton
@@ -43,7 +45,7 @@
             NewGameButton.BackColor = Color.Wheat;
             NewGameButton.FlatStyle = FlatStyle.Flat;
             NewGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NewGameButton.Location = new Point(12, 146);
+            NewGameButton.Location = new Point(26, 146);
             NewGameButton.Name = "NewGameButton";
             NewGameButton.Size = new Size(172, 37);
             NewGameButton.TabIndex = 0;
@@ -56,7 +58,7 @@
             RecordsButton.BackColor = Color.Wheat;
             RecordsButton.FlatStyle = FlatStyle.Flat;
             RecordsButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            RecordsButton.Location = new Point(12, 189);
+            RecordsButton.Location = new Point(26, 189);
             RecordsButton.Name = "RecordsButton";
             RecordsButton.Size = new Size(172, 37);
             RecordsButton.TabIndex = 2;
@@ -69,7 +71,7 @@
             ExitGameButton.BackColor = Color.Wheat;
             ExitGameButton.FlatStyle = FlatStyle.Flat;
             ExitGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ExitGameButton.Location = new Point(12, 272);
+            ExitGameButton.Location = new Point(26, 272);
             ExitGameButton.Name = "ExitGameButton";
             ExitGameButton.Size = new Size(172, 37);
             ExitGameButton.TabIndex = 3;
@@ -83,7 +85,7 @@
             ChooseEasyButton.FlatStyle = FlatStyle.Flat;
             ChooseEasyButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ChooseEasyButton.ForeColor = SystemColors.ControlText;
-            ChooseEasyButton.Location = new Point(238, 102);
+            ChooseEasyButton.Location = new Point(225, 102);
             ChooseEasyButton.Name = "ChooseEasyButton";
             ChooseEasyButton.Size = new Size(172, 37);
             ChooseEasyButton.TabIndex = 4;
@@ -97,7 +99,7 @@
             ChooseMediumButton.BackColor = Color.Wheat;
             ChooseMediumButton.FlatStyle = FlatStyle.Flat;
             ChooseMediumButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ChooseMediumButton.Location = new Point(238, 146);
+            ChooseMediumButton.Location = new Point(225, 146);
             ChooseMediumButton.Name = "ChooseMediumButton";
             ChooseMediumButton.Size = new Size(172, 37);
             ChooseMediumButton.TabIndex = 5;
@@ -111,7 +113,7 @@
             ChooseHardButton.BackColor = Color.Wheat;
             ChooseHardButton.FlatStyle = FlatStyle.Flat;
             ChooseHardButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            ChooseHardButton.Location = new Point(238, 189);
+            ChooseHardButton.Location = new Point(225, 189);
             ChooseHardButton.Name = "ChooseHardButton";
             ChooseHardButton.Size = new Size(172, 37);
             ChooseHardButton.TabIndex = 6;
@@ -126,7 +128,7 @@
             StartGameButton.Enabled = false;
             StartGameButton.FlatStyle = FlatStyle.Flat;
             StartGameButton.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            StartGameButton.Location = new Point(238, 272);
+            StartGameButton.Location = new Point(225, 272);
             StartGameButton.Name = "StartGameButton";
             StartGameButton.Size = new Size(172, 37);
             StartGameButton.TabIndex = 7;
@@ -135,13 +137,40 @@
             StartGameButton.Visible = false;
             StartGameButton.Click += StartGameButton_Click;
             // 
+            // RecordTable
+            // 
+            RecordTable.BackColor = Color.Wheat;
+            RecordTable.BorderStyle = BorderStyle.FixedSingle;
+            RecordTable.Font = new Font("Bernard MT Condensed", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RecordTable.FormattingEnabled = true;
+            RecordTable.ItemHeight = 22;
+            RecordTable.Location = new Point(226, 102);
+            RecordTable.Name = "RecordTable";
+            RecordTable.SelectionMode = SelectionMode.None;
+            RecordTable.Size = new Size(172, 244);
+            RecordTable.TabIndex = 8;
+            RecordTable.Visible = false;
+            // 
+            // RecordsLabel
+            // 
+            RecordsLabel.AutoSize = true;
+            RecordsLabel.Font = new Font("Bernard MT Condensed", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            RecordsLabel.Location = new Point(225, 71);
+            RecordsLabel.Name = "RecordsLabel";
+            RecordsLabel.Size = new Size(125, 28);
+            RecordsLabel.TabIndex = 9;
+            RecordsLabel.Text = "BEST SCORES";
+            RecordsLabel.Visible = false;
+            // 
             // MenuForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            BackgroundImageLayout = ImageLayout.Zoom;
-            ClientSize = new Size(449, 450);
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(423, 424);
+            Controls.Add(RecordsLabel);
+            Controls.Add(RecordTable);
             Controls.Add(StartGameButton);
             Controls.Add(ChooseHardButton);
             Controls.Add(ChooseMediumButton);
@@ -155,6 +184,7 @@
             Text = "Sapper";
             TopMost = true;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -168,5 +198,7 @@
         private Button StartGameButton;
 
         private DifficultyLevel difficulty;
+        private ListBox RecordTable;
+        private Label RecordsLabel;
     }
 }

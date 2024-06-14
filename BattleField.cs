@@ -1,3 +1,6 @@
+using System.Text;
+using System.Windows.Forms.Design.Behavior;
+
 namespace Saper
 {
     public enum DifficultyLevel
@@ -38,8 +41,15 @@ namespace Saper
             this.IsFirstClick = true;
             this.GameStatus = Status.Continue;
             this.bombCount = 0;
+            this.cellsOpened = 0;
+            this.cellsMarked = 0;
+
+            ResultLabel.Text = "";
             Init();
             GenerateButtons();
+            time = 0;
+            GameTimer.Interval = 1000;
+            GameTimer.Start();
         }
 
         private void Init()
@@ -72,14 +82,22 @@ namespace Saper
             if (IsFirstClick)
             {
                 PlantBombs(cell.x, cell.y);
-                BombCountInit();
+                InitBombCount();
                 IsFirstClick = false;
             }
             switch (e.Button)
             {
                 case MouseButtons.Right:
-                    cell.ToggleFlag();
-
+                    Cell.Status status = cell.ToggleFlag();
+                    if (status == Cell.Status.Marked)
+                    {
+                        cellsMarked++;
+                    }
+                    if (status == Cell.Status.Unknown)
+                    {
+                        cellsMarked--;
+                    }
+                    CheckResult();
                     break;
                 case MouseButtons.Left:
                     if (cell.hasBomb())
@@ -88,7 +106,14 @@ namespace Saper
                     }
                     else
                     {
+                        if (cell.state == Cell.Status.Marked)
+                        {
+                            cell.state = Cell.Status.None;
+                            cell.Image = null;
+                            cellsMarked--;
+                        }
                         OpenCell(cell.x, cell.y);
+                        CheckResult();
                     }
                     break;
             }
@@ -106,13 +131,13 @@ namespace Saper
         }
 
         // Расставление количества бомб на карте
-        private void BombCountInit()
+        private void InitBombCount()
         {
             for (int i = 0; i < fieldSize.Width; i++)
             {
                 for (int j = 0; j < fieldSize.Height; j++)
                 {
-                    if (map[i,j].empty())
+                    if (map[i, j].empty())
                     {
                         int count = 0;
                         for (int k = i - 1; k <= i + 1; k++)
@@ -126,19 +151,41 @@ namespace Saper
 
                                 // TODO
                                 // Косяк в map[k,l] - k и l еще не проверены
-                                if (isValidCellNumber(k, l) && map[k, l].hasBomb() && !((i == k) && (j == k)))
+                                if (isValidCellNumber(k, l))
                                 {
-                                    count++;
+                                    //if((i == k) && (j == l))
+                                    //{
+                                    //    continue;
+                                    //}
+                                    if (map[k, l].hasBomb() && ((i != k) || (j != l)))
+                                    {
+                                        count++;
+                                    }
                                 }
+
                             }
                         }
                         map[i, j].setBombsAround(count);
-                      
                     }
                 }
             }
         }
 
+        private int OpenedCellsCount()
+        {
+            int count = 0;
+            for (int i = 0; i < fieldSize.Height; i++)
+            {
+                for (int j = 0; j < fieldSize.Width; j++)
+                {
+                    if (map[i, j].state == Cell.Status.Opened)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
 
         private Color GetCellColor(int rang)
         {
@@ -170,6 +217,7 @@ namespace Saper
         {
             if (!map[x, y].visited)
             {
+                map[x, y].state = Cell.Status.Opened;
                 if (map[x, y].BombsAround != 0)
                 {
                     map[x, y].Text = Convert.ToString(map[x, y].BombsAround);
@@ -186,7 +234,7 @@ namespace Saper
                             if (isValidCellNumber(k, l))
                             {
                                 map[x, y].visited = true;
-                                if(map[x, y].empty())
+                                if (map[x, y].empty())
                                 {
                                     map[x, y].Enabled = false;
                                     map[x, y].BackColor = Color.WhiteSmoke;
@@ -234,9 +282,12 @@ namespace Saper
                 int posY = generator.Next(0, fieldSize.Height);
                 // TODO исправить
 
-                if (map[posX, posY].plantBomb() && (posX != x) && (posY != y))
+                if ((posX != x) && (posY != y))
                 {
-                    plantCounter++;
+                    if (map[posX, posY].plantBomb())
+                    {
+                        plantCounter++;
+                    }
                 }
             }
         }
@@ -283,33 +334,53 @@ namespace Saper
 
         private void CheckResult()
         {
-            int bombsMarked = 0;
+            if ((cellsMarked == bombCount) && (OpenedCellsCount() == fieldSize.Width * fieldSize.Height - bombCount))
+            {
+                GameTimer.Stop();
+                //GameStatus = Status.Win;
+                GameWon();  
+            }
+        }
+
+        private void GameWon()
+        {
+            ResultLabel.Text = "You win!";
             for (int i = 0; i < fieldSize.Width; i++)
             {
                 for (int j = 0; j < fieldSize.Height; j++)
                 {
-                    if (map[i, j].hasBomb() && (map[i, j].flag == Cell.Flag.Marked))
-                    {
-                        bombsMarked++;
-                    }
+                    map[i, j].BackColor = Color.FromArgb(255,255, 229, 158);
+                    map[i, j].Enabled = false;
                 }
             }
-            if (bombsMarked == bombCount)
+            RefreshRecords();
+        }
+
+        private void RefreshRecords()
+        {
+            string[] lines = File.ReadAllLines("records.txt");
+            int[] results = new int[lines.Length + 1];
+
+            for (int i = 0; i < lines.Length; i++)
             {
-                GameStatus = Status.Win;
-                for (int i = 0; i < fieldSize.Width; i++)
-                {
-                    for (int j = 0; j < fieldSize.Height; j++)
-                    {
-                        map[i, j].BackColor = Color.Green;
-                    }
-                }
+                results[i] = Convert.ToInt32(lines[i]);
             }
+            results[results.Length - 1] = time;
+            Array.Sort(results);
+
+            StreamWriter recordsWriter = new StreamWriter("records.txt", false);
+            for (int i = 0; i < results.Length; i++)
+            {
+                recordsWriter.WriteLineAsync(Convert.ToString(results[i]));
+            }
+            recordsWriter.Close();
         }
         // Конец игры
         // Отрисовка бомб
         private void GameOver(int x, int y)
         {
+            GameTimer.Stop();
+            ResultLabel.Text = "Game over!";
             for (int i = 0; i < fieldSize.Width; i++)
             {
                 for (int j = 0; j < fieldSize.Height; j++)
@@ -318,11 +389,43 @@ namespace Saper
                     {
                         map[i, j].Image = Properties.Resources.bomb;
                     }
+                    map[i, j].Enabled = false;
                 }
             }
             map[x, y].Image = Properties.Resources.nuclear_explosion;
             map[x, y].BackColor = Color.Red;
         }
+
+        private void GameTimer_Tick(object sender, EventArgs e)
+        {
+            time++;
+            int seconds = time % 60;
+            int minutes = time / 60;
+            string secText;
+            string minText;
+
+            if (seconds < 10)
+            {
+                secText = "0" + Convert.ToString(seconds);
+            }
+            else
+            {
+                secText = Convert.ToString(seconds);
+            }
+
+            if (minutes < 10)
+            {
+                minText = "0" + Convert.ToString(minutes);
+            }
+            else
+            {
+                minText = Convert.ToString(minutes);
+            }
+
+            TimerSecLabel.Text = secText;
+            TimerMinLabel.Text = minText;
+        }
+
 
         private Size fieldSize;             // Размер поля
         private Cell[,] map;                // Кнопки на поле
@@ -331,6 +434,9 @@ namespace Saper
         private Status GameStatus;
         private bool IsFirstClick;
         private int bombCount;
-       
+        private int cellsOpened;
+        private int cellsMarked;
+        private int time;
+
     }
 }

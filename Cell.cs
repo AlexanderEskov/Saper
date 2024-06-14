@@ -10,11 +10,12 @@ namespace Saper
 {
     internal class Cell : Button
     {
-        public enum Flag
+        public enum Status
         {
             None,
             Marked,
-            Unknown
+            Unknown,
+            Opened
         }
 
         public enum Content
@@ -25,27 +26,28 @@ namespace Saper
         public Cell()
         {
             content = Content.Empty;
-            flag = Flag.None;
+            state = Status.None;
         }
 
         // Переключает флаг ячейки по правой кнопке мыши
-        public void ToggleFlag()
+        public Status ToggleFlag()
         {
-            if (this.flag == Flag.None)
+            if (this.state == Status.None)
             {
-                this.flag = Flag.Marked;
+                this.state = Status.Marked;
                 this.Image = Properties.Resources.flag;
             }
-            else if (this.flag == Flag.Marked)
+            else if (this.state == Status.Marked)
             {
-                this.flag = Flag.Unknown;
+                this.state = Status.Unknown;
                 this.Image = Properties.Resources.question;
             }
-            else if (this.flag == Flag.Unknown)
+            else if (this.state == Status.Unknown)
             {
-                this.flag = Flag.None;
+                this.state = Status.None;
                 this.Image = null;
             }
+            return this.state;
         }
 
         // True, если в ячейке есть бомба
@@ -79,7 +81,7 @@ namespace Saper
         }
 
         public Content content;     // Реальное содержимое ячейки (Есть бомба или нет)
-        public Flag flag;           // Метка установленная игроком ("Пусто", "Флаг", или "Неизвестно")
+        public Status state;           // Метка установленная игроком ("Пусто", "Флаг", или "Неизвестно")
         public int BombsAround;     // Количество бомб вокруг
         public int x;               // Координата ячейки X
         public int y;               // Координата ячейки Y
